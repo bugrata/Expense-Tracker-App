@@ -21,7 +21,7 @@ class _ExpensesState extends State<Expenses> {
     category: Category.work,
     ),
     Expense(
-      title: 'Cinema',
+    title: 'Cinema',
     amount: 15.69,
     date: DateTime.now(),
     category: Category.leisure,
@@ -30,9 +30,22 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpenseOverlay () {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
-      builder: (ctx) => const NewExpense(),
+      builder: (ctx) => NewExpense(onAddExpense: _adExpense,),
       );
+  }
+
+  void _adExpense (Expense expense) {
+    setState(() {
+      _registeredExpenses.add(expense);
+    });
+  }
+
+  void _removeExpense (Expense expense) {
+    setState(() {
+      _registeredExpenses.remove(expense);
+    });
   }
 
   @override
@@ -51,7 +64,7 @@ class _ExpensesState extends State<Expenses> {
         children: [
           const Text('The Chart'),
           Expanded(
-            child: ExpensesList(expenses: _registeredExpenses)
+            child: ExpensesList(expenses: _registeredExpenses, onRemoveExpense: _removeExpense,)
             ),
         ],
         ),
