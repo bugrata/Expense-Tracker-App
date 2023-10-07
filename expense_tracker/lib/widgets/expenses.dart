@@ -17,33 +17,36 @@ class _ExpensesState extends State<Expenses> {
   final List<Expense> _registeredExpenses = [
     Expense(
       title: 'Flutter Course',
-    amount: 19.99,
-    date: DateTime.now(),
-    category: Category.work,
+      amount: 19.99,
+      date: DateTime.now(),
+      category: Category.work,
     ),
     Expense(
-    title: 'Cinema',
-    amount: 15.69,
-    date: DateTime.now(),
-    category: Category.leisure,
+      title: 'Cinema',
+      amount: 15.69,
+      date: DateTime.now(),
+      category: Category.leisure,
     ),
   ];
 
-  void _openAddExpenseOverlay () {
+  void _openAddExpenseOverlay() {
     showModalBottomSheet(
+      useSafeArea: true,
       isScrollControlled: true,
       context: context,
-      builder: (ctx) => NewExpense(onAddExpense: _adExpense,),
-      );
+      builder: (ctx) => NewExpense(
+        onAddExpense: _adExpense,
+      ),
+    );
   }
 
-  void _adExpense (Expense expense) {
+  void _adExpense(Expense expense) {
     setState(() {
       _registeredExpenses.add(expense);
     });
   }
 
-  void _removeExpense (Expense expense) {
+  void _removeExpense(Expense expense) {
     final expenseIndex = _registeredExpenses.indexOf(expense);
 
     setState(() {
@@ -52,7 +55,9 @@ class _ExpensesState extends State<Expenses> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        duration: const Duration(seconds: 3,),
+        duration: const Duration(
+          seconds: 3,
+        ),
         content: const Text('Expense deleted'),
         action: SnackBarAction(
           label: 'Undo',
@@ -68,14 +73,17 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(context) {
+    final width = MediaQuery.of(context).size.width;
+
     Widget mainContent = const Center(
       child: Text('No Expense Found. Start adding some!'),
     );
 
     if (_registeredExpenses.isNotEmpty) {
-      mainContent = ExpensesList(expenses: _registeredExpenses,
-            onRemoveExpense: _removeExpense,
-            );
+      mainContent = ExpensesList(
+        expenses: _registeredExpenses,
+        onRemoveExpense: _removeExpense,
+      );
     }
 
     return Scaffold(
@@ -87,15 +95,24 @@ class _ExpensesState extends State<Expenses> {
             icon: const Icon(Icons.add),
           ),
         ],
-        ),
-      body: Column(
-        children: [
-          Chart(expenses: _registeredExpenses),
-          Expanded(
-            child: mainContent,
+      ),
+      body: width < 600
+          ? Column(
+              children: [
+                Chart(expenses: _registeredExpenses),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(child: Chart(expenses: _registeredExpenses)),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
             ),
-        ],
-        ),
     );
   }
 }

@@ -6,7 +6,7 @@ final formatter = DateFormat.yMd();
 
 const uuid = Uuid();
 
-enum Category {food, travel, leisure, work}
+enum Category { food, travel, leisure, work }
 
 const categoryIcons = {
   Category.food: Icons.lunch_dining,
@@ -21,7 +21,7 @@ class Expense {
     required this.amount,
     required this.date,
     required this.category,
-    }) : id =  uuid.v4();
+  }) : id = uuid.v4();
 
   final String id;
   final String title;
@@ -38,7 +38,9 @@ class ExpenseBucket {
   const ExpenseBucket({required this.category, required this.expenses});
 
   ExpenseBucket.forCategory(List<Expense> allExpenses, this.category)
-    : expenses = allExpenses.where((expense) => expense.category == category).toList();
+      : expenses = allExpenses
+            .where((expense) => expense.category == category)
+            .toList();
 
   final Category category;
   final List<Expense> expenses;
